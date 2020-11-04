@@ -1,0 +1,162 @@
+<div class="d-flex">
+    <div class="form-inline mr-auto">
+        <div class="form-group mb-2">
+            <input type="text" class="form-control mr-2" placeholder="buscar"
+            [(ngModel)]="filtroLista">
+        </div>
+    </div>
+    
+    <div>
+        <button class="btn btn-outline-primary" (click)="novoOrcamento(template)">
+            <i class="fa fa-plus-circle"></i>&nbsp;
+            Novo Orcamento
+        </button>
+    </div>
+    
+</div>
+<table class="table table-stripe">
+    <thead class="thead-dark">
+        <tr>
+            <th>OrcamentoId</th>
+            <th>ClienteId</th>
+            <th>DataOrçamento</th>
+            <th>DataAlteração</th>
+            <th>UsuarioCriação</th>
+            <th>UsuarioAlteração</th>
+            <th>ValorTotal</th>
+            <th>Fechado</th>
+        </tr>
+    </thead>
+    <tbody *ngIf="orcamentos && orcamentos.length" >
+        <tr *ngFor="let item of orcamentosFiltrados" >
+            <td>{{ item.orcamentoId }}</td>
+            <td>{{ item.clienteId }}</td>
+            <td>{{ item.dataOrcamento }}</td>
+            <td>{{ item.dataAlteracao }}</td>
+            <td>{{ item.usuarioCriacao }}</td>
+            <td>{{ item.usuarioAltercao }}</td>
+            <td>{{ item.valorTotal }}</td>
+            <td>{{ item.situacao }}</td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn-sm btn-success" tooltip='Editar'
+                    (click)="editarOrcamento(item, template)">
+                    <i class='fa fa-edit'></i>
+                </button>
+                <button class="btn btn-sm btn-danger"  tooltip='Excluir'
+                    (click)="excluirOrcamento(item, confirm)">
+                    <i class='fa fa-eraser'></i>
+                </button>
+            </div>                
+        </td>
+    </tr>
+</tbody>
+<tfoot *ngIf="!orcamentos">
+    <tr>
+        <td colspan="7" class="text-center">
+            <h4>
+                Nenhum orçamento encontrado!
+            </h4>
+        </td>
+    </tr>
+</tfoot>
+</table>
+
+<div bsModal #template="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-sizes-name1" class="modal-title pull-left">Large modal</h4>
+                <button type="button" class="close pull-right" (click)="template.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="registerForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label>ClienteId</label>
+                            <input  type="text" class="form-control" 
+                            [ngClass]="{'is-invalid': registerForm.get('clienteId').errors && registerForm.get('clienteId').touched}"
+                            formControlName="clienteId">
+                        </div>
+                    </div>  
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label>DataOrcamento</label>
+                            <input  type="text" class="form-control" 
+                            [ngClass]="{'is-invalid': registerForm.get('dataOrcamento').errors && registerForm.get('dataOrcamento').touched}"
+                            formControlName="dataOrcamento">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label>UsuarioCriacao</label>
+                            <input  type="text" class="form-control" 
+                            [ngClass]="{'is-invalid': registerForm.get('usuarioCriacao').errors && registerForm.get('usuarioCriacao').touched}"
+                            formControlName="usuarioCriacao">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label>UsuarioAlteracao</label>
+                            <input  type="text" class="form-control" 
+                            [ngClass]="{'is-invalid': registerForm.get('usuarioAlteracao').errors && registerForm.get('usuarioAlteracao').touched}"
+                            formControlName="usuarioAlteracao">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label> ValorTotal</label>
+                            <input  type="text" class="form-control" 
+                            [ngClass]="{'is-invalid': registerForm.get('valorTotal').errors && registerForm.get('valorTotal').touched}"
+                            formControlName="valorTotal">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label>Fechado</label>
+                            <input  type="text" class="form-control" 
+                            [ngClass]="{'is-invalid': registerForm.get('situacao').errors && registerForm.get('situacao').touched}"
+                            formControlName="situacao">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex">
+                <button class="btn btn-secondary" (click)="template.hide()">
+                    Fechar
+                </button>
+                <button class="btn btn-primary ml-auto" [disabled]="!registerForm.valid" (click)="salvarAlteracao(template)">
+                    Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #confirm="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+	<div class="modal-dialog modal-sm">
+  		<div class="modal-content">
+    		<div class="modal-header">
+      			<h4 class="modal-title pull-left">
+        			Deletando Orcamento
+      			</h4>
+      			<button type="button" class="close pull-right" (click)="confirm.hide()" aria-label="Close">
+        			<span aria-hidden="true">&times;</span>
+      			</button>
+    		</div>
+    		<div class="modal-body">
+      			<p>{{bodyDeletarOrcamento}}</p>
+    		</div>    
+    		<div class="modal-footer btn-group d-flex">      
+      			<button type="button" class="btn btn-outline-primary" (click)="confirm.hide()">
+        			CENCELAR
+      			</button>
+      			<button type="button" class="btn btn-outline-danger" (click)="confirmeDelete(confirm)">
+          			DELETAR
+        		</button>
+    		</div>
+  		</div>
+	</div>
+</div>
